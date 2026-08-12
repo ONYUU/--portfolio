@@ -1,0 +1,25 @@
+name: Fetch hwplib jar
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fetch-hwplib.yml'
+      - 'trigger.txt'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download hwplib
+        run: |
+          mkdir -p out
+          curl -L --fail --retry 3 -o out/hwplib.jar https://raw.githubusercontent.com/gridi-ai/hancom-mcp/main/lib/hwplib.jar
+          file out/hwplib.jar
+          ls -lh out/hwplib.jar
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: hwplib-jar
+          path: out/hwplib.jar
+          retention-days: 1
