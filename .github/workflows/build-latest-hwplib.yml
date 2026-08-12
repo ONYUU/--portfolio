@@ -22,6 +22,8 @@ jobs:
           java-version: '8'
           cache: maven
           cache-dependency-path: hwplib-src/pom.xml
+      - name: Remove unused legacy SNMP import
+        run: sed -i '/com.sun.jmx.snmp.agent.SnmpUserDataFactory/d' hwplib-src/src/main/java/kr/dogfoot/hwplib/writer/autosetter/ForDocInfo.java
       - name: Build
         working-directory: hwplib-src
         run: mvn -B -DskipTests package
