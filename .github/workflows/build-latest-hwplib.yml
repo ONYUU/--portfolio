@@ -1,0 +1,38 @@
+name: Build latest hwplib
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-latest-hwplib.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout hwplib source
+        uses: actions/checkout@v4
+        with:
+          repository: neolord0/hwplib
+          path: hwplib-src
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: hwplib-src/pom.xml
+      - name: Build
+        working-directory: hwplib-src
+        run: mvn -B -DskipTests package
+      - name: Collect jar
+        run: |
+          mkdir -p out
+          cp hwplib-src/target/*.jar out/
+          ls -lh out
+      - name: Upload jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: hwplib-latest
+          path: out/*.jar
+          retention-days: 1
