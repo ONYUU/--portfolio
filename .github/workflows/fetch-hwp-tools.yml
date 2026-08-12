@@ -1,0 +1,25 @@
+name: Fetch HWP tools
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fetch-hwp-tools.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download tools
+        run: |
+          mkdir -p out
+          curl -L --fail --retry 3 -o out/hwplib.jar https://raw.githubusercontent.com/gridi-ai/hancom-mcp/main/lib/hwplib.jar
+          curl -L --fail --retry 3 -o out/hwp2hwpx.jar https://raw.githubusercontent.com/gridi-ai/hancom-mcp/main/lib/hwp2hwpx.jar
+          sha256sum out/* > out/SHA256SUMS.txt
+          ls -lh out
+      - name: Upload tools
+        uses: actions/upload-artifact@v4
+        with:
+          name: hwp-tools
+          path: out/
+          retention-days: 1
