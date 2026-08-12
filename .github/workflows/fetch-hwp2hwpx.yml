@@ -1,0 +1,23 @@
+name: Fetch hwp2hwpx jar
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fetch-hwp2hwpx.yml'
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download converter
+        run: |
+          mkdir -p out
+          curl -L --fail --retry 3 -o out/hwp2hwpx.jar https://raw.githubusercontent.com/gridi-ai/hancom-mcp/main/lib/hwp2hwpx.jar
+          ls -lh out/hwp2hwpx.jar
+      - name: Upload converter
+        uses: actions/upload-artifact@v4
+        with:
+          name: hwp2hwpx-jar
+          path: out/hwp2hwpx.jar
+          retention-days: 1
